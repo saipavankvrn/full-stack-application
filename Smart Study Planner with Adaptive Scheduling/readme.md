@@ -1,71 +1,65 @@
-# Smart Student Planner
+# 🚀 Smart Study Planner: Adaptive Scheduling Engine
 
-A full-stack web application designed to help students manage their time intelligently. The Smart Student Planner features a weekly study grid and a focus mode to optimize productivity patterns.
+A high-performance, **Rule-Based Adaptive Scheduling System** designed to optimize student productivity through intelligent time-drift learning and dynamic priority recalculation. Built with a modern Java/Spring Boot backend and a premium, responsive Vanilla JS frontend.
 
-## Features
+---
 
-- **Interactive Weekly Grid & Timetable (`index.html`)**: Add, view, and manage your subjects and study sessions in real-time.
-- **Dedicated Focus Mode (`focus.html`)**: Features an integrated Pomodoro-style productivity timer to help you maintain deep focus without browser distractions.
-- **Rule-Based Adaptive Scheduling**: The intelligent backend automatically receives your topics, notes, deadlines, and confidence levels, persisting them seamlessly.
-- **Zero-Config Database Initialization**: The API is configured to automatically create the root database schema and its internal tables (`schema.sql`) when the server spins up for the first time.
-- **Embedded Automated Startup**: No need to install Maven manually on Windows! Simply run `run.bat` to automatically download a portable Maven environment and spin up the server with a single click.
+## 🌟 Core Disruptive Features
 
-## Tech Stack
+### 🧠 1. Adaptive Rescheduling Engine
+The backend doesn't just store tasks; it manages your life.
+*   **48-Hour Missed Task Scanning**: Automatically identifies the most optimal free gap within the next 48 hours for any missed session.
+*   **Overload Protection**: If no gaps exist, the engine identifies the lowest-priority task in your schedule and replaces it with the high-priority missed task.
+*   **Explainable Decision Logs**: Every schedule movement is logged in the `RescheduleLogs` table with human-readable reasons for full transparency.
 
-- **Backend**: Java 17, Spring Boot 3.x
-- **Database**: MySQL Server
-- **Frontend**: Pure HTML5, Vanilla CSS, Vanilla JavaScript (No React/Angular dependency)
+### 📉 2. Performance & Drift Learning
+The system grows as you grow.
+*   **Cumulative Drift Tracking**: Calculates the deviation between *Planned* and *Actual* study time.
+*   **Auto-Correcting Durations**: If you consistently take longer on a subject (e.g., Physics), the engine automatically increases the target duration for future Physics sessions based on a 7-day rolling average.
 
-## Architecture
+### ⚡ 3. 5-Factor Priority Matrix
+Tasks are ranked using a sophisticated adaptive formula:
+`Priority = (Deadline Weight) + (Missed Count * 10) + ((5 - Confidence) * 8) + Time Decay + Drift Factor`
+*   **Time Decay**: Boosting priority for subjects you haven't studied recently to prevent knowledge starvation.
 
-The application is built with a clear separation of concerns to ensure simple debugging and extending capabilities:
-- **Presentation Layer**: A responsive modern UI built with purely Vanilla JS/HTML/CSS located in `src/main/resources/static`.
-- **Routing & Controllers**: Spring Boot REST APIs handling client GET, POST, PUT, and DELETE requests.
-- **Data Access Layer**: JPA/Hibernate for seamless MySQL database transaction management on top of the auto-initialized SQL setup.
+### 🎨 4. Premium Deep Work Workspace (Focus Mode)
+A distraction-free, 3-column interactive environment:
+*   **Active Drafting Board**: Full-screen HTML5 Canvas with technical grid backgrounds for sketching diagrams or solving equations.
+*   **Resources & Points**: Capture key breakthroughs and attach reference files (PDF/Images) mid-session.
+*   **Intelligent Sync**: Post-session finalization captures Focus Scores and Confidence Levels to feed the adaptive engine.
+*   **Fully Responsive**: Specialized layouts for Desktop (`1fr:2fr:1fr`), Tablet (`2-column`), and Mobile (`Vertical Stack`).
 
-## Prerequisites
+---
 
-- **Java 17+** (Ensure `java -version` returns 17 or above).
-- **MySQL Server** running dynamically on `localhost:3306`.
+## 🛠️ Tech Stack
 
-## Setup Instructions
+*   **Backend**: Java 17, Spring Boot 3.x (Antigravity routing patterns)
+*   **Database**: MySQL 8.0 (Auto-schema initialization via `schema.sql`)
+*   **Frontend**: HTML5, CSS3 (Modern Grid/Flexbox), Vanilla JavaScript
+*   **Design**: Cyberpunk Dark Theme, Glassmorphism, Responsive UI/UX
 
-### 1. Database Configuration
-The application handles scaffolding automatically, but you must make sure it has the proper master credentials to do so:
-- Open `smart study planner/smart-student-planner/src/main/resources/application.yml`
-- Locate the `datasource` block:
-  ```yaml
-  datasource:
-    url: jdbc:mysql://localhost:3306/smart_student_planner?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: root
-    password: YOUR_MYSQL_PASSWORD  # Change this to match your local MySQL root password!
-  ```
-*Note: Because `createDatabaseIfNotExist=true` is present, you do not need to manually create the `smart_student_planner` database. Simply update the password inline!*
+---
 
-### 2. Running The Sub-Project
-Navigate into the backend server directory:
-```bash
-cd "smart study planner/smart-student-planner"
-```
+## 🏗️ Architecture & Schema
+The project maintains a strict separation of concerns:
+*   **`PriorityEngine.java`**: Core mathematical models for task weighting.
+*   **`RescheduleService.java`**: The logic behind the 48h scanning and task replacement.
+*   **`FocusSessionService.java`**: Orchestrates the sync between manual focus inputs and the database.
 
-#### For Windows Users (Easiest Method):
-Double-click or execute the provided batch script:
-```cmd
-run.bat
-```
-*(This script will download a lightweight portable version of Maven into `.maven/` automatically in the background and launch the full project).*
+---
 
-#### For Mac / Linux / Experienced Users:
-If you already have Maven configured globally on your machine, simply run:
-```bash
-mvn clean install
-mvn spring-boot:run
-```
+## 🚥 Quick Start (Windows)
 
-### 3. Accessing The Real-Time Client
-Once you see `Started SmartStudentPlannerApplication in X seconds` printed in the console:
-- Open your browser.
-- Navigate to **[http://localhost:8080](http://localhost:8080)** to view the dashboard!
+1.  **MySQL Setup**: Ensure MySQL is running on port `3306`.
+2.  **Configuration**: Update `src/main/resources/application.yml` with your local MySQL password.
+3.  **One-Click Start**: Run `run.bat` in the project root.
+    *   *Note: This script automatically handles Maven installation and database schema creation.*
+4.  **Access**: Open **[http://localhost:8080](http://localhost:8080)**.
 
-## License
-MIT License
+---
+
+## 🔒 Session Integrity
+Focus Mode includes a built-in safety lock. Closing a session before the timer ends or without finalizing will trigger an integrity warning and automatically record the progress as **PARTIAL**, ensuring your adaptive metrics remain accurate.
+
+---
+**Developed with ❤️ by Antigravity**
