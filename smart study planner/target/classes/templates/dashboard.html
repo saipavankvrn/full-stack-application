@@ -19,6 +19,7 @@
             <li><a href="/" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
             <li><a href="/documents"><i class="fas fa-file-alt"></i> Documents</a></li>
             <li><a href="/subjects"><i class="fas fa-book"></i> Subjects</a></li>
+            <li><a href="/tasks"><i class="fas fa-tasks"></i> To-Do List</a></li>
             <li><a href="/profile"><i class="fas fa-user-circle"></i> Profile</a></li>
             <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
@@ -49,13 +50,33 @@
                 <span class="stat-title">Total Documents</span>
                 <span class="stat-value" th:text="${totalDocuments}">12</span>
             </div>
+            <div class="stat-card">
+                <span class="stat-title">Pending Tasks</span>
+                <span class="stat-value" th:text="${totalPendingTasks}" style="color: #e67e22;">3</span>
+            </div>
         </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Upcoming Deadlines -->
+            <section class="dashboard-section">
+                <h2>Upcoming Deadlines (24h)</h2>
+                <div class="activity-feed" style="min-height: 200px;">
+                    <div class="activity-item" th:each="task : ${upcomingTasks}" style="border-left: 4px solid #e74c3c;">
+                        <div class="activity-details">
+                            <p class="activity-desc" th:text="${task.title}" style="font-weight: 600;">Finish Math Assignment</p>
+                            <span class="activity-time" style="color: #e74c3c;">
+                                <i class="fas fa-exclamation-circle"></i> Due: <span th:text="${#temporals.format(task.dueDate, 'HH:mm (MMM dd)')}">18:00</span>
+                            </span>
+                        </div>
+                    </div>
+                    <p th:if="${#lists.isEmpty(upcomingTasks)}" style="text-align: center; color: var(--text-muted); padding: 2rem;">No urgent deadlines. Chill out! ☕</p>
+                </div>
+            </section>
 
         <!-- Recent Activity Feed -->
         <section class="dashboard-section recent-activity">
             <h2>Recent Activity</h2>
             <div class="activity-feed">
-                <!-- Example Activity Items -->
                 <div class="activity-item" th:each="activity : ${recentActivities}">
                     <div class="activity-icon">
                         <i class="fas fa-clock"></i>
@@ -70,7 +91,8 @@
                 <p th:if="${#lists.isEmpty(recentActivities)}" style="text-align: center; color: var(--text-muted); padding: 2rem;">No recent activity yet. Start by adding a subject!</p>
             </div>
         </section>
-    </main>
+    </div>
+</main>
 
 </body>
 </html>

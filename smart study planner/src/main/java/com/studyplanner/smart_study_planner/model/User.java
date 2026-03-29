@@ -36,6 +36,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StudyCard> studyCards;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Task> tasks;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -67,6 +70,8 @@ public class User {
     public void setActivities(List<Activity> activities) { this.activities = activities; }
     public List<StudyCard> getStudyCards() { return studyCards; }
     public void setStudyCards(List<StudyCard> studyCards) { this.studyCards = studyCards; }
+    public List<Task> getTasks() { return tasks; }
+    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

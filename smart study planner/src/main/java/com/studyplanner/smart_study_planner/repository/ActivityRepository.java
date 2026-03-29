@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     List<Activity> findByUserOrderByTimestampDesc(User user);
+    List<Activity> findTop7ByUserOrderByTimestampDesc(User user);
+    List<Activity> findTop5ByUserOrderByTimestampDesc(User user);
 }

@@ -2,6 +2,7 @@ package com.studyplanner.smart_study_planner.controller;
 
 import com.studyplanner.smart_study_planner.model.User;
 import com.studyplanner.smart_study_planner.repository.ActivityRepository;
+import com.studyplanner.smart_study_planner.repository.TaskRepository;
 import com.studyplanner.smart_study_planner.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,9 @@ public class AuthController {
 
     @Autowired
     private ActivityRepository activityRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -50,11 +54,21 @@ public class AuthController {
     @GetMapping("/")
     public String dashboard(Model model) {
         User user = getLoggedInUser();
-        // Placeholder values for the dashboard statistics
-        model.addAttribute("totalSubjects", user != null ? user.getSubjects().size() : 0);
-        model.addAttribute("totalDocuments", user != null ? user.getDocuments().size() : 0);
-        model.addAttribute("recentActivities", user != null ? activityRepository.findByUserOrderByTimestampDesc(user) : null);
-        model.addAttribute("user", user);
+        if (user != null) {
+            model.addAttribute("totalSubjects", user.getSubjects().size());
+            model.addAttribute("totalDocuments", user.getDocuments().size());
+            model.addAttribute("totalPendingTasks", taskRepository.countByUserAndIsCompleted(user, false));
+            model.addAttribute("recentActivities", activityRepository.findTop7ByUserOrderByTimestampDesc(user));
+            
+            // Upcoming tasks (due in the next 24 hours, not completed)
+            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+            java.time.LocalDateTime next24Hours = now.plusHours(24);
+            model.addAttribute("upcomingTasks", taskRepository.findByUserAndIsCompleted(user, false).stream()
+                .filter(t -> t.getDueDate() != null && t.getDueDate().isAfter(now) && t.getDueDate().isBefore(next24Hours))
+                .collect(java.util.stream.Collectors.toList()));
+            
+            model.addAttribute("user", user);
+        }
         return "dashboard";
     }
 
