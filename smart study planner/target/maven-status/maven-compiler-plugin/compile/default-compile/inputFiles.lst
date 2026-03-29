@@ -1,18 +1,18 @@
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\repository\StudyCardRepository.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\model\StudyCard.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\model\Document.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\controller\StudyBoardController.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\repository\DocumentRepository.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\repository\UserRepository.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\model\User.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\repository\SubjectRepository.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\model\Activity.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\repository\ActivityRepository.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\SmartStudyPlannerApplication.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\config\SecurityConfig.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\config\WebConfig.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\controller\SubjectController.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\controller\AuthController.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\model\Subject.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\config\CustomUserDetailsService.java
-E:\prototype\dupe 3\src\main\java\com\studyplanner\smart_study_planner\controller\DocumentController.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\repository\DocumentRepository.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\model\Document.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\config\SecurityConfig.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\repository\ActivityRepository.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\controller\SubjectController.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\model\Subject.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\model\User.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\SmartStudyPlannerApplication.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\config\CustomUserDetailsService.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\controller\DocumentController.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\repository\StudyCardRepository.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\config\WebConfig.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\controller\AuthController.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\model\StudyCard.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\model\Activity.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\repository\SubjectRepository.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\repository\UserRepository.java
+E:\full stack\cs4hs\smart study planner\src\main\java\com\studyplanner\smart_study_planner\controller\StudyBoardController.java
