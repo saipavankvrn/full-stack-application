@@ -14,9 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -90,6 +88,32 @@ public class DocumentController {
         activityRepository.save(activity);
 
         return "redirect:/documents?success=uploaded";
+    }
+
+    @PostMapping("/documents/delete/{id}")
+    public String deleteDocument(@PathVariable("id") Long id) {
+        User user = getLoggedInUser();
+        Document doc = documentRepository.findById(id).orElse(null);
+        if (doc != null && doc.getUser().getId().equals(user.getId())) {
+            // Delete from disk
+            try {
+                Path filePath = Paths.get(uploadDir).resolve(doc.getFilePath());
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Log activity
+            Activity activity = new Activity();
+            activity.setDescription("Deleted document: " + doc.getFileName());
+            activity.setActivityType("DELETE");
+            activity.setUser(user);
+            activityRepository.save(activity);
+
+            // Delete from database
+            documentRepository.delete(doc);
+        }
+        return "redirect:/documents?success=deleted";
     }
 
     private User getLoggedInUser() {

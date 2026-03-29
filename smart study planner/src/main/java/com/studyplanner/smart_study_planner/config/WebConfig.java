@@ -21,6 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
         
         // This allows serving files from the 'uploads' folder via /uploads/** URL
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:/" + uploadAbsolutePath + "/");
+                .addResourceLocations("file:///" + uploadAbsolutePath.replace("\\", "/") + "/");
     }
 }

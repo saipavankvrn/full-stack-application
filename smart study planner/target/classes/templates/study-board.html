@@ -51,7 +51,7 @@
         <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: var(--shadow);">
             <h3>Subject Files</h3>
             <div style="display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
-                <a th:each="doc : ${documents}" th:href="@{'/uploads/' + ${doc.filePath}}" target="_blank"
+                <a th:each="doc : ${documents}" th:href="@{/uploads/{filename}(filename=${doc.filePath})}" target="_blank"
                    style="background: #f1f2f6; padding: 8px 15px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; text-decoration: none; color: #2d3436; transition: background 0.2s;">
                      <i class="fas fa-file-pdf" style="color: #e74c3c"></i>
                      <span th:text="${doc.fileName}">Lecture.pdf</span>
@@ -67,9 +67,15 @@
                  th:data-card-id="${card.id}"
                  th:data-title="${card.title}"
                  th:data-content="${card.content}"
-                 th:data-image="${card.imagePath != null and card.imagePath != 'null' ? '/uploads/' + card.imagePath : ''}"
+                 th:data-image="${card.imagePath != null and card.imagePath != 'null'} ? @{/uploads/{f}(f=${card.imagePath})} : ''"
                  onclick="openCardModalFromDiv(this)">
-                <img th:if="${card.imagePath != null and !#strings.isEmpty(card.imagePath) and card.imagePath != 'null'}" th:src="@{'/uploads/' + ${card.imagePath}}" class="card-img" alt="Card Image">
+                <th:block th:if="${card.imagePath != null and !#strings.isEmpty(card.imagePath) and card.imagePath != 'null'}">
+                    <img th:if="${#strings.containsIgnoreCase(card.imagePath, '.jpg') or #strings.containsIgnoreCase(card.imagePath, '.jpeg') or #strings.containsIgnoreCase(card.imagePath, '.png') or #strings.containsIgnoreCase(card.imagePath, '.gif') or #strings.containsIgnoreCase(card.imagePath, '.webp')}" th:src="@{/uploads/{filename}(filename=${card.imagePath})}" class="card-img" alt="Card Image">
+                    <div th:unless="${#strings.containsIgnoreCase(card.imagePath, '.jpg') or #strings.containsIgnoreCase(card.imagePath, '.jpeg') or #strings.containsIgnoreCase(card.imagePath, '.png') or #strings.containsIgnoreCase(card.imagePath, '.gif') or #strings.containsIgnoreCase(card.imagePath, '.webp')}" class="card-img" style="display:flex; justify-content:center; align-items:center; flex-direction:column; background: #dfe6e9; color: #636e72;">
+                        <i class="fas fa-file-alt" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <span style="font-size: 0.9rem; font-weight: 600;">Document Attached</span>
+                    </div>
+                </th:block>
                 <div class="card-body" style="padding-bottom: 3.5rem;">
                     <span class="subject-badge" th:style="'background:' + ${subject.colorCode}" th:text="${subject.name}">Mathematics</span>
                     <h3 class="card-title" th:text="${card.title}">Quick Formula</h3>
@@ -92,7 +98,7 @@
                                style="width: 100%; padding: 10px; border: 2px solid #f1f2f6; border-radius: 8px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">Attach Image (Optional)</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">Attach File (Image/PPT/PDF)</label>
                         <input type="file" name="image" class="btn" style="background: #f1f2f6; color: #2d3436; width: 100%;">
                     </div>
                     <div style="grid-column: span 2;">
@@ -115,6 +121,9 @@
             <div id="cardViewMode">
                 <h2 id="modalTitle" style="margin-bottom: 1.2rem; color: #2d3436; font-size: 1.8rem; padding-right: 30px;"></h2>
                 <img id="modalImage" src="" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 10px; margin-bottom: 1.5rem; display: none; background: #f8f9fa;">
+                <a id="modalFileLink" href="" target="_blank" style="display: none; margin-bottom: 1.5rem; padding: 12px 20px; background: #f1f2f6; border-radius: 8px; color: #2d3436; text-decoration: none; align-items: center; justify-content: center; gap: 8px; font-weight: 600;">
+                    <i class="fas fa-external-link-alt"></i> Open / View Attached File
+                </a>
                 <p id="modalContent" style="white-space: pre-wrap; color: #4b6584; line-height: 1.7; font-size: 1.05rem; margin-bottom: 2rem;"></p>
                 <div style="display: flex; gap: 15px; border-top: 1px solid #f1f2f6; padding-top: 1.5rem;">
                     <button class="btn" onclick="toggleEditMode()" style="background: #f39c12;"><i class="fas fa-edit"></i> Edit Card</button>
@@ -133,7 +142,7 @@
                         <input type="text" name="title" id="editTitle" required style="width: 100%; padding: 12px; border: 2px solid #f1f2f6; border-radius: 8px; font-size: 1rem;">
                     </div>
                     <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #636e72;">Swap Image (Optional)</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #636e72;">Swap File (Image/PPT/PDF)</label>
                         <input type="file" name="image" class="btn" style="background: #f1f2f6; color: #2d3436; width: 100%; padding: 12px;">
                     </div>
                     <div style="margin-bottom: 1.5rem;">
@@ -165,12 +174,26 @@
         document.getElementById('modalContent').innerText = content;
         
         const imgEl = document.getElementById('modalImage');
+        const fileLinkEl = document.getElementById('modalFileLink');
+        
         if (imagePath && imagePath.trim() !== '') {
-            imgEl.src = imagePath;
-            imgEl.style.display = 'block';
+            const lowerPath = imagePath.toLowerCase();
+            const isImage = lowerPath.includes('.jpg') || lowerPath.includes('.jpeg') || lowerPath.includes('.png') || lowerPath.includes('.gif') || lowerPath.includes('.webp');
+            
+            if (isImage) {
+                imgEl.src = imagePath;
+                imgEl.style.display = 'block';
+                fileLinkEl.style.display = 'none';
+            } else {
+                imgEl.src = '';
+                imgEl.style.display = 'none';
+                fileLinkEl.href = imagePath;
+                fileLinkEl.style.display = 'flex';
+            }
         } else {
             imgEl.style.display = 'none';
             imgEl.src = '';
+            fileLinkEl.style.display = 'none';
         }
 
         // Setup forms
