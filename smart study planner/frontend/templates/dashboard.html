@@ -97,5 +97,9 @@
 
     <!-- Global Tracker Script -->
     <script th:src="@{/js/tracker.js}"></script>
+    <!-- AI Tutor Integration -->
+    <div th:replace="~{fragments/ai-sidebar :: ai-sidebar}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script th:src="@{/js/ai-assistant.js}"></script>
 </body>
 </html>

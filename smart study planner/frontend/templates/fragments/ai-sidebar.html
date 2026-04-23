@@ -1,0 +1,146 @@
+<div th:fragment="ai-sidebar">
+    <!-- Floating Action Button -->
+    <button id="ai-fab" class="ai-fab" aria-label="Open AI Tutor">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- Sidebar Overlay & Content -->
+    <aside id="ai-sidebar" class="ai-sidebar hidden">
+        <div class="ai-sidebar-header">
+            <div class="ai-header-left" style="display: flex; align-items: center; gap: 10px;">
+                <button id="ai-history-toggle" class="ai-icon-btn" title="Chat History"><i class="fas fa-bars"></i></button>
+                <h3 id="ai-chat-title"><i class="fas fa-robot"></i> AI Tutor</h3>
+            </div>
+            <div class="ai-header-actions">
+                <button id="ai-minimize-btn" class="ai-icon-btn" title="Minimize"><i class="fas fa-window-minimize"></i></button>
+                <button id="ai-expand-btn" class="ai-icon-btn" title="Expand/Collapse"><i class="fas fa-window-maximize"></i></button>
+                <button id="ai-close-btn" class="ai-icon-btn" title="Close"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        
+        <!-- History Drawer -->
+        <div id="ai-history-drawer" class="ai-history-drawer hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
+                <h4 style="margin:0; color: #a0a0a0; font-weight: normal;">Previous Sessions</h4>
+                <button id="ai-drawer-new-chat" style="background: var(--primary, #6c5ce7); border: none; color: white; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;"><i class="fas fa-plus"></i> New Chat</button>
+            </div>
+            <ul id="ai-session-list">
+                <!-- Dynamically populated -->
+            </ul>
+        </div>
+
+        <div id="ai-chat-history" class="ai-chat-history">
+            <div class="ai-message ai-bot">
+                Hello! I'm your AI Tutor. Ask me anything about the current page!
+            </div>
+        </div>
+
+        <div class="ai-input-area">
+            <textarea id="ai-user-input" placeholder="Type your question..."></textarea>
+            <button id="ai-send-btn" class="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </aside>
+
+    <!-- Highlighting Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <style>
+        /* Base Variables and FAB */
+        :root {
+            --ai-primary: #8A2BE2;
+        }
+        .ai-fab {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            border-radius: 50%; background-color: var(--ai-primary);
+            color: white; font-size: 24px; border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 999;
+            transition: transform 0.3s ease, background-color 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .ai-fab:hover { transform: scale(1.1); }
+        .ai-fab.hidden { display: none; }
+        
+        /* Sidebar container */
+        .ai-sidebar {
+            position: fixed; top: 0; right: 0; height: 100vh; width: 350px;
+            background: rgba(30, 30, 30, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #fff;
+            z-index: 1000; display: flex; flex-direction: column;
+            transform: translateX(100%); visibility: hidden; opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, visibility 0.3s;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.4); border-left: 1px solid rgba(255,255,255,0.15);
+        }
+        .ai-sidebar.open { transform: translateX(0); visibility: visible; opacity: 1; }
+        
+        /* Modal / Expanded Mode */
+        .ai-sidebar.expanded {
+            width: 70vw; max-width: 900px; right: 50%; transform: translateX(50%); top: 5vh; height: 90vh;
+            border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+        .ai-sidebar.expanded.hidden { transform: translateX(50%) scale(0.9); opacity: 0; pointer-events: none; }
+
+        /* Minimized Mode */
+        .ai-sidebar.minimized {
+            height: 60px; width: 350px; top: auto; bottom: 0; right: 30px; transform: translateY(0);
+            border-radius: 15px 15px 0 0; overflow: hidden;
+        }
+        .ai-sidebar.minimized .ai-chat-history, .ai-sidebar.minimized .ai-input-area, .ai-sidebar.minimized .ai-history-drawer {
+            display: none;
+        }
+
+        /* Header */
+        .ai-sidebar-header {
+            padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);
+        }
+        .ai-sidebar-header h3 { margin: 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+        .ai-icon-btn {
+            background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1rem;
+            cursor: pointer; padding: 5px; transition: color 0.2s;
+        }
+        .ai-icon-btn:hover { color: white; }
+        .ai-header-actions { display: flex; gap: 8px; }
+
+        /* History Drawer */
+        .ai-history-drawer {
+            background: rgba(20,20,20,0.98); position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+            z-index: 10; padding: 20px; box-sizing: border-box; overflow-y: auto; transition: transform 0.3s;
+            transform: translateX(-100%);
+        }
+        .ai-history-drawer.open { transform: translateX(0); }
+        .ai-history-drawer h4 { margin-top: 0; color: var(--ai-primary); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .ai-history-drawer ul { list-style: none; padding: 0; margin: 0; }
+        .ai-history-drawer li { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.2s; border-radius: 5px; color: #b0b0b0; }
+        .ai-history-drawer li:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .ai-history-drawer li i { margin-right: 10px; color: rgba(255,255,255,0.4); }
+        #ai-drawer-new-chat { background: var(--ai-primary) !important; }
+        #ai-drawer-new-chat:hover { background: #7A1BD2 !important; }
+
+        /* Chat History */
+        .ai-chat-history { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        
+        /* Messages */
+        .ai-message { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; }
+        .ai-message.ai-bot { background: rgba(255,255,255,0.1); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .ai-message.ai-user { background: var(--ai-primary); align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        /* Markdown / Code styling inside bot messages */
+        .ai-message.ai-bot pre { background: #282c34; padding: 12px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
+        .ai-message.ai-bot code { font-family: 'Consolas', monospace; font-size: 0.9em; }
+        .ai-message.ai-bot p { margin: 0 0 10px 0; }
+        .ai-message.ai-bot p:last-child { margin: 0; }
+
+        /* Input Area */
+        .ai-input-area { padding: 15px; background: rgba(0,0,0,0.4); display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+        .ai-input-area textarea { flex-grow: 1; resize: none; height: 45px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; padding: 10px 15px; font-family: inherit; transition: border-color 0.2s; }
+        .ai-input-area textarea:focus { outline: none; border-color: var(--ai-primary); background: rgba(255,255,255,0.1); }
+        .ai-send-btn { background: var(--ai-primary); border: none; color: white; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .ai-send-btn:hover { background: #7A1BD2; }
+        
+        /* Typing animation */
+        .typing-indicator { display: inline-block; width: 40px; }
+        .typing-indicator span { display: inline-block; width: 6px; height: 6px; background-color: white; border-radius: 50%; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    </style>
+</div>
