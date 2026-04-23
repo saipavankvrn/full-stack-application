@@ -28,6 +28,7 @@
             <li><a href="/"><i class="fas fa-th-large"></i> Dashboard</a></li>
             <li><a href="/documents"><i class="fas fa-file-alt"></i> Documents</a></li>
             <li><a href="/subjects" class="active"><i class="fas fa-book"></i> Subjects</a></li>
+            <li><a href="/analytics"><i class="fas fa-chart-pie"></i> Visual Analytics</a></li>
             <li><a href="/profile"><i class="fas fa-user-circle"></i> Profile</a></li>
             <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
@@ -230,5 +231,7 @@
         }
     });
     </script>
+    <!-- Global Tracker Script -->
+    <script th:src="@{/js/tracker.js}"></script>
 </body>
 </html>

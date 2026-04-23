@@ -59,3 +59,13 @@ CREATE TABLE activities (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Table for Activity Tracking (Analytics)
+CREATE TABLE activity_sessions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    module_name VARCHAR(100) NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    duration_seconds BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
