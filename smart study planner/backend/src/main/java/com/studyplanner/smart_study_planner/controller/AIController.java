@@ -58,16 +58,6 @@ public class AIController {
         return ResponseEntity.ok(sessions);
     }
 
-    // List top 10 sessions (History)
-    @GetMapping("/history")
-    public ResponseEntity<?> getHistorySessions() {
-        User user = getLoggedInUser();
-        if (user == null) return ResponseEntity.status(401).body("Unauthorized");
-
-        List<AIChatSession> sessions = sessionRepository.findTop10ByUserOrderByCreatedAtDesc(user);
-        return ResponseEntity.ok(sessions);
-    }
-
     // Load history
     @GetMapping("/sessions/{id}")
     public ResponseEntity<?> getSessionHistory(@PathVariable Long id) {

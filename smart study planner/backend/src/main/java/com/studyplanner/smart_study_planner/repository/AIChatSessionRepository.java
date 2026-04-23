@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface AIChatSessionRepository extends JpaRepository<AIChatSession, Long> {
     List<AIChatSession> findByUserOrderByCreatedAtDesc(User user);
-    List<AIChatSession> findTop10ByUserOrderByCreatedAtDesc(User user);
 }

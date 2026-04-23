@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    alert("AI Assistant JS loaded!");
     const fab = document.getElementById('ai-fab');
     const sidebar = document.getElementById('ai-sidebar');
     const closeBtn = document.getElementById('ai-close-btn');
@@ -79,12 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    const drawerNewChatBtn = document.getElementById('ai-drawer-new-chat');
-
     newChatBtn?.addEventListener('click', () => {
-        startNewChat();
-    });
-    drawerNewChatBtn?.addEventListener('click', () => {
         startNewChat();
     });
 
@@ -107,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function loadSessionsList() {
-        fetchWithCsrf('/api/ai/history')
+        fetchWithCsrf('/api/ai/sessions')
         .then(res => res.json())
         .then(sessions => {
             sessionList.innerHTML = '';
